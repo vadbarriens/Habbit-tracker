@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from users.models import User
+from habbit.models import Habbit
 
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+@admin.register(Habbit)
+class HabitAdmin(admin.ModelAdmin):
     """Класс для отображения атрибутов в панели админки"""
-    list_display = ('id', 'email',)
+    list_display = ('id', 'action')
