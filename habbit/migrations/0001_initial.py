@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -22,12 +21,20 @@ class Migration(migrations.Migration):
                 ('time', models.TimeField(help_text='Укажите время', verbose_name='Время')),
                 ('action', models.CharField(help_text='Опишите действие', max_length=350, verbose_name='Действие')),
                 ('is_pleasant', models.BooleanField(default=False, verbose_name='Признак приятной привычки')),
-                ('frequency', models.PositiveSmallIntegerField(choices=[(1, 'Ежедневно'), (2, 'Каждые 2 дня'), (3, 'Каждые 3 дня'), (4, 'Каждые 4 дня'), (5, 'Каждые 5 дней'), (6, 'Каждые 6 дней'), (7, 'Еженедельно')], default=1, help_text='Выберите периодичность', verbose_name='Периодичность')),
-                ('award', models.CharField(blank=True, help_text='Опишите вознаграждение', max_length=255, null=True, verbose_name='Вознаграждение')),
+                ('frequency', models.PositiveSmallIntegerField(
+                    choices=[(1, 'Ежедневно'), (2, 'Каждые 2 дня'), (3, 'Каждые 3 дня'), (4, 'Каждые 4 дня'),
+                             (5, 'Каждые 5 дней'), (6, 'Каждые 6 дней'), (7, 'Еженедельно')], default=1,
+                    help_text='Выберите периодичность', verbose_name='Периодичность')),
+                ('award', models.CharField(blank=True, help_text='Опишите вознаграждение', max_length=255, null=True,
+                                           verbose_name='Вознаграждение')),
                 ('time_completed', models.PositiveSmallIntegerField()),
                 ('is_public', models.BooleanField(default=False, verbose_name='Публикация')),
-                ('owner', models.ForeignKey(help_text='Укажите пользователя', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Пользователь')),
-                ('related_habbit', models.ForeignKey(blank=True, help_text='Выберите приятную привычку', null=True, on_delete=django.db.models.deletion.SET_NULL, to='habbit.habit', verbose_name='Приятная привычка')),
+                ('owner',
+                 models.ForeignKey(help_text='Укажите пользователя', on_delete=django.db.models.deletion.CASCADE,
+                                   to=settings.AUTH_USER_MODEL, verbose_name='Пользователь')),
+                ('related_habbit', models.ForeignKey(blank=True, help_text='Выберите приятную привычку', null=True,
+                                                     on_delete=django.db.models.deletion.SET_NULL, to='habbit.habit',
+                                                     verbose_name='Приятная привычка')),
             ],
             options={
                 'verbose_name': 'Привычка',
