@@ -1,3 +1,4 @@
+import sys
 from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
@@ -7,6 +8,12 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
+
+if not SECRET_KEY:
+    if 'test' in sys.argv or os.environ.get('CI') == 'true' or os.environ.get('DEBUG') == 'True':
+        SECRET_KEY = 'django-insecure-test-key-for-ci-only-12345'
+    else:
+        raise ValueError("SECRET_KEY environment variable must be set!")
 
 DEBUG = True
 
@@ -180,3 +187,11 @@ CELERY_BEAT_SCHEDULE = {
 }
 TELEGRAM_URL = os.getenv('TELEGRAM_URL')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+
+if "test" in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
