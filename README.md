@@ -31,7 +31,7 @@
 Клонировать репозиторий:
 ```
  git clone https://github.com/yourname/Habbit_tracker.git`
-cd django_rest
+cd Habbit_tracker
 ```
 
 Создать и активировать виртуальное окружение:
@@ -52,42 +52,60 @@ python manage.py migrate
 ```
 python manage.py createsuperuser
 ```
-Создайте файл .env и заполните его:
+
+## CI/CD
+### Установка Docker и Docker Compose
+Обновление пакетов:
 ```
-cp .env.example .env
+sudo apt update
 ```
-Соберите и запустите контейнеры:
+установка Docker:
 ```
-docker-compose up --build -d
+sudo apt install docker-compose
 ```
-После запуска проект будет доступен по адресу:
+###  Настройка SSH-доступа
+Сгенерируйте SSH-ключ на локальной машине:
 ```
-http://localhost:8000
+ssh-keygen -t ed25519 -f ~/.ssh/deploy_key -N ""
 ```
-Остановка проекта:
+Скопируйте публичный ключ на сервер:
 ```
-docker-compose down
+ssh-copy-id -i ~/.ssh/deploy_key.pub ваш_пользователь@ip_сервера
 ```
-Остановка с удалением volumes:
+Проверьте подключение:
 ```
-docker-compose down -v
-```
-Пересборка проекта:
-```
-docker-compose up --build -d
-```
-Просмотр логов:
-```
-docker-compose logs <service_name>  # web, db, redis, celery, celery-beat
+ssh -i ~/.ssh/deploy_key ваш_пользователь@ip_сервера
 ```
 
-## Структура проекта
-- /code - корневая директория проекта внутри контейнера
+## Подготовка GitHub Secrets
+В настройках репозитория GitHub:
 
-- /code/static - статические файлы
+Перейдите в Settings → Secrets and variables → Actions
 
-- /var/lib/postgresql/data - данные PostgreSQL
+Создайте новые секреты:
 
-- /data - данные Redis
+DOCKER_HUB_USERNAME - ваш логин на Docker Hub
 
-- /var/lib/celery - состояние Celery Beat
+DOCKER_HUB_ACCESS_TOKEN - токен доступа Docker Hub
+
+SSH_PRIVATE_KEY - содержимое файла deploy_key (приватный ключ)
+
+SSH_USER - пользователь сервера (например, ubuntu)
+
+SERVER_IP - IP-адрес вашего сервера
+ ## Workflow CI/CD
+При каждом пуше в ветку develop автоматически выполняются:
+
+1. Линтинг кода (Flake8)
+
+2. Запуск тестов (pytest)
+
+3. Сборка Docker-образа и публикация в Docker Hub
+
+4. Деплой на удалённый сервер
+
+
+### Адрес сервера
+```
+ssh -l final_task 158.160.252.144
+```
